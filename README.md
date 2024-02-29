@@ -19,10 +19,10 @@ As you can see we defined an abstract class "GAProblem" in the ga_solver.py file
 
 All you have to do is to create a file for your problem, and implement these method in a chil class of "GAProblem".
 Methods that have to be redefined are :
-	- problem_chromosome (In your case, what's your chromosome ?) 
-	- problem_fitness (In your case, how do you measure the quality of the chromosome)
-	- reproduction (In your case, hwo do you want to merge old chromosomes to make new ones)
-	- mutation ( In you case, how do you want to see your new chromosomes mutating)
+- problem_chromosome (In your case, what's your chromosome ?) 
+- problem_fitness (In your case, how do you measure the quality of the chromosome)
+- reproduction (In your case, hwo do you want to merge old chromosomes to make new ones)
+- mutation ( In you case, how do you want to see your new chromosomes mutating)
 
 You can also change some parameters, like the selection rate or the mutation_rate (in the __innit__ method of the class GASolver), or change the pop_size in the reset_population method.
 You can aslo defind a treshold value for fitness, or change the max number of generations in the evolve_until method.
