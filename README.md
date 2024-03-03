@@ -25,9 +25,10 @@ Methods that should be defined in your specific file are :
 - problem_fitness (In your case, how do you measure the quality of the chromosome ?)
 - reproduction (In your case, how do you want to merge old chromosomes to make new ones ?)
 - mutation (In your case, how do you want the mutation of your new chromosomes to happen ?)
+
 The files masterming_problem.py and tsp_problem.py should be of great help to better understand how to define the methods !
 
-You can also change other parameters like the selection_rate, the mutation_rate (in the __innit__ method of the class GASolver), or the pop_size in the reset_population method.
-You can also define a treshold value for fitness, or change the max number of generations in the evolve_until method.
+You can also change other parameters like the selection_rate, the mutation_rate (in the __innit__ method of the class GASolver), or the pop_size in the reset_population method. 
+You can also define a treshold value for fitness, or change the max number of generations in the evolve_until method. 
 All those parameters are in the GASolver class
 
