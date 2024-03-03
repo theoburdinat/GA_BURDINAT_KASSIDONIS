@@ -7,6 +7,8 @@ From a template made by tdrumond & agademer
 
 EPF MDE P2025 DEA2
 GA solving TSP example
+
+The file to specify all elements of the resolution of the TSP problem, that are not generic.
 """
 from ga_solver import GAProblem
 import cities
@@ -20,12 +22,12 @@ class TSProblem(GAProblem):
         Args:
             city_dict (Array[String]) = List of cities with their coordinates
         """
-        self.possible_cities = cities.default_road(city_dict)
+        self.possible_cities = cities.default_road(city_dict) #Get the possible cities for the problem
 
     def problem_chromosome(self):
         """Definition of the "chromosome" for the TSP problem"""
-        chromosome = cities.default_road(city_dict)
-        random.shuffle(chromosome)
+        chromosome = cities.default_road(city_dict) #Get the list of the cities
+        random.shuffle(chromosome) #Shuffle the names of the cities to create a chromosome
         return chromosome
     
     def problem_fitness(self, chromosome):
@@ -34,7 +36,7 @@ class TSProblem(GAProblem):
         Args:
             chromosome (array): The chromosome whose fitness is to be calculated
         """
-        return -cities.road_length(city_dict, chromosome)
+        return -cities.road_length(city_dict, chromosome) #Get the fitness and invert it bc we are looking for the shortest way/fitness
 
     def reproduction(self, a, b):
         """
@@ -45,15 +47,15 @@ class TSProblem(GAProblem):
             a (array): A random chromosom from the population that will become one of the parent of the new chromosome
             b (array): A random chromosom from the population that will become the other parent of the new chromosome
         """
-        x_point = len(a.chromosome)//2
-        new_chrom = a.chromosome[0:x_point] #We take the middle of the first parent
-        for city in range(x_point,len(b.chromosome)): #For each gene of the second parent, we check if the city is already in the newborn gene
-            if b.chromosome[city] not in new_chrom:
-                new_chrom.append(b.chromosome[city]) #If not we add it
-        if len(new_chrom) < len(a.chromosome): #If we don't have all the cities
-            for i in range(len(self.possible_cities)): #We have to add the missing ones
-                if self.possible_cities[i] not in new_chrom:
-                    new_chrom.append(self.possible_cities[i])
+        x_point = len(a.chromosome)//2 #Get half the length of the chromosome (list of cities)
+        new_chrom = a.chromosome[0:x_point] #Add the first half of parent "a" to the new chromosome
+        for city in range(x_point,len(b.chromosome)): #Iteration among the second half of parent "b"
+            if b.chromosome[city] not in new_chrom: #Chech if the city is not already in the newborn gene
+                new_chrom.append(b.chromosome[city]) #Add the city
+        if len(new_chrom) < len(a.chromosome): #Check if the length of the new chromosome is right
+            for i in range(len(self.possible_cities)): #Iterate throught all cities
+                if self.possible_cities[i] not in new_chrom: #Check if a city is missing from the new chromosome
+                    new_chrom.append(self.possible_cities[i]) #Add the city
         return new_chrom
 
     def mutation(self, new_chrom, len_chromosome):
@@ -64,9 +66,9 @@ class TSProblem(GAProblem):
             new_chrom (array): the newborn chromosome
             len_chromosome (int): the length of a chromosome
         """
-        pos_a = random.randrange(0,len_chromosome)
-        pos_b = random.randrange(0,len_chromosome)
-        new_chrom[pos_a], new_chrom[pos_b] = new_chrom[pos_b], new_chrom[pos_a]
+        pos_a = random.randrange(0,len_chromosome) #Chose randomly a position in the length of the chromosome
+        pos_b = random.randrange(0,len_chromosome) #Chose randomly another position in the length of the chromosome
+        new_chrom[pos_a], new_chrom[pos_b] = new_chrom[pos_b], new_chrom[pos_a] #Invert the cities on those positions
         return new_chrom
 
 if __name__ == '__main__':

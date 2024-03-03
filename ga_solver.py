@@ -74,7 +74,7 @@ class GAProblem:
 
 class GASolver:
     def __init__(self, problem: GAProblem, selection_rate=0.5, mutation_rate=0.1):
-        """Initializes an instance of a ga_solver for a given GAProblem
+        """Initialize an instance of a ga_solver for a given GAProblem
 
         Args:
             problem (GAProblem): GAProblem to be solved by this ga_solver
@@ -94,10 +94,10 @@ class GASolver:
             pop_size (int, optional): number of Individuals initialized
         """
         for i in range(pop_size):
-            chromosome = self._problem.problem_chromosome() #We create a chromosome
-            fitness = self._problem.problem_fitness(chromosome) #Then we calculate its fitness
-            new_individual = Individual(chromosome, fitness) #We create the new Individual
-            self._population.append(new_individual) #We update the population list
+            chromosome = self._problem.problem_chromosome() #Call problem_chromosome to create a chromosome (problem-specific)
+            fitness = self._problem.problem_fitness(chromosome) #Calculate fitness of th chromosome
+            new_individual = Individual(chromosome, fitness) #Create a new individual
+            self._population.append(new_individual) #Update the population list
 
     def evolve_for_one_generation(self):
         """ Apply the process for one generation : 
@@ -109,34 +109,26 @@ class GASolver:
                 mutation_rate i.e., mutate it if a random value is below   
                 mutation_rate
         """
-        #Sort the population & Selection
-        self._population.sort(reverse=True)
-        selected_population=self._population[:round(len(self._population)*self._selection_rate)]
+        self._population.sort(reverse=True) #Sort the population
+        selected_population=self._population[:round(len(self._population)*self._selection_rate)] #Select the best adapted part of the population
 
-        # While the size of the population is less than the initial size of the population
-        while len(selected_population) < len(self._population):
-            #a and b are the two parents of the new Individual - chosen randomly
-            a=random.choice(selected_population)
-            b=random.choice(selected_population)
-            #If a and b are the same chromosome we take other parents, it doesn't make a lot of sense
-            if a==b:
-                continue
+        while len(selected_population) < len(self._population): #Iteration until the size of population back to its initial size
+            a=random.choice(selected_population) #Chose randomly a parent "a"
+            b=random.choice(selected_population) #Chose randomly a parent "b"
+            if a==b: #Check is parent "a" is same as "b"
+                continue #Skip the iteration for these parents
 
-            #Reproduction (problem-specific)
-            new_chrom=self._problem.reproduction(a, b)
+            new_chrom=self._problem.reproduction(a, b) #Call reproduction (problem-specific)
 
-            #Mutation (The mutation activation criterion is general (random event). However, the way to modify the chromosome is different for each problem)
-            number = random.random()
-            if number<self._mutation_rate:
-                new_chrom=self._problem.mutation(new_chrom, len(a.chromosome))
+            number = random.random() #Get a random number between 0 and 1.0
+            if number<self._mutation_rate: #Check if the number is smaller than the mutation rate
+                new_chrom=self._problem.mutation(new_chrom, len(a.chromosome)) #Call mutation (problem-specific)
 
-            # Calculation of the fitness of the new chromosome, and creation of the Individual - update of the population
-            fitness=self._problem.problem_fitness(new_chrom)
-            new_individual=Individual(new_chrom, fitness)
-            selected_population.append(new_individual)
+            fitness=self._problem.problem_fitness(new_chrom) #Call the problem_fitness (problem-specific) 
+            new_individual=Individual(new_chrom, fitness) #Create a new individual
+            selected_population.append(new_individual) #Update the population with the new individual
         
-        # When the new population has the good number of Individuals inside itself, the old population is changed to the new population
-        self._population = selected_population
+        self._population = selected_population #Replace the old population by the new one
 
     def show_generation_summary(self):
         """ Print some debug information on the current state of the population """
@@ -155,7 +147,7 @@ class GASolver:
             - The fitness of the best Individual is greater than or equal to
               threshold_fitness
         """
-        for i in range(max_nb_of_generations):
-            self.evolve_for_one_generation()
-            if self.get_best_individual().fitness == threshold_fitness:
-                break
+        for i in range(max_nb_of_generations): #Iteration until the max nb of generation is reached
+            self.evolve_for_one_generation() #Call evolve_for_one_generation
+            if self.get_best_individual().fitness == threshold_fitness: #Check if the best individual is goog enough
+                break #End the solving
